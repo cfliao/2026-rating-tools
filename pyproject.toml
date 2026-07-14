@@ -1,0 +1,12 @@
+[project]
+name = "2026-rating-tools"
+version = "0.1.0"
+description = "2026-rating-tools"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+	"requests>=2.32.0",
+	"pandas>=3.0.3",
+	"openpyxl>=3.1.5",
+	"xlrd>=2.0.2",
+]
