@@ -10,3 +10,21 @@ dependencies = [
 	"openpyxl>=3.1.5",
 	"xlrd>=2.0.2",
 ]
+
+[project.optional-dependencies]
+build = [
+	"pyinstaller>=6.21.0",
+]
+
+[tool.pyinstaller]
+noconfirm = true
+clean = true
+onefile = true
+distpath = "bin"
+
+[tool.pyinstaller.targets]
+scripts = [
+	"rate_courses.py",
+	"filter_ai_courses.py",
+	"build_dashboard.py",
+]
