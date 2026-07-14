@@ -3,8 +3,8 @@
 本專案基於全國課程網所匯出的課程資料，在篩選出初步課程後，針對該課程教育部AI人才圖像核心能力分別加以評分，並輸出為html檔。提供各校自行初步進行盤點，細部流程如下:
 
 1. 使用者由全國課程網，取出要評估課程，並匯出為xlsx  (預設為input.xlsx)
-2. 關鍵字篩選: 基於 [keyterms.txt](keyterms.txt) 初步篩選 AI 相關課程，並輸出為csv (預設為output.csv)
-3. 使用LLM 依規則([prompt.txt](prompt.txt))產出 A–D 能力評分，輸出為csv (預設為rating.csv)
+2. 關鍵字篩選: 基於 [keyterms.txt](config/keyterms.txt) 初步篩選 AI 相關課程，並輸出為csv (預設為output.csv)
+3. 使用LLM 依規則([prompt.txt](config/prompt.txt))產出 A–D 能力評分，輸出為csv (預設為rating.csv)
 4. 產生可互動檢視的分析儀表板(單一html，預設為out/dashboard.html)
 
 ![Dashboard Preview 1](references/1.png)
