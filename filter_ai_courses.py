@@ -9,7 +9,7 @@ filter_ai_courses2.py
 避免欄位內容中的逗號造成後續處理混淆。
 
 使用方式:
-    python filter_ai_courses.py --input data/114-0001.xlsx --terms config/keyterms.txt --output data/114-0001-output.csv
+    python filter_ai_courses.py --input data/114-0001.xlsx --terms keyterms.txt --output data/114-0001-output.csv
 """
 
 import argparse
@@ -144,9 +144,9 @@ def replace_comma_with_semicolon(value):
 
 def main():
     ap = argparse.ArgumentParser(description="依關鍵詞篩選 Excel 課程清單並輸出 CSV")
-    ap.add_argument("--input", default="data/114-0001.xls", help="輸入課程 Excel 檔案 (.xls/.xlsx)")
-    ap.add_argument("--terms", default="config/keyterms.txt", help="關鍵詞清單檔案")
-    ap.add_argument("--output", default="", help="輸出的 CSV 檔案")
+    ap.add_argument("--input", default="input.xls", help="輸入課程 Excel 檔案 (.xls/.xlsx)")
+    ap.add_argument("--terms", default="keyterms.txt", help="關鍵詞清單檔案")
+    ap.add_argument("--output", default="ai-courses.csv", help="輸出的 CSV 檔案")
     args = ap.parse_args()
 
     input_path = resolve_input_path(args.input)
@@ -160,8 +160,9 @@ def main():
         print(f"[錯誤] 找不到關鍵詞檔案: {keyterms_path}", file=sys.stderr)
         sys.exit(1)
 
-    default_output = re.sub(r"\.(xls|xlsx)$", "-output.csv", input_path, flags=re.IGNORECASE)
-    output_path = args.output or default_output
+    #default_output = re.sub(r"\.(xls|xlsx)$", "-ai-courses.csv", input_path, flags=re.IGNORECASE)
+    #output_path = args.output or default_output
+    output_path = args.output 
 
     terms = load_keyterms(keyterms_path)
     if not terms:

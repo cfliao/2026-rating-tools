@@ -9,10 +9,9 @@ C:/rating-tools
 ├─ filter_ai_courses.exe --> AI關鍵字初篩工具
 ├─ rate_courses.exe      --> AI能力評分工具
 ├─ build_dashboard.exe   --> 互動網頁產生工具
-├─ config/
-│  ├─ dashboard_template.html
-│  ├─ keyterms.txt
-│  └─ prompt.txt
+├─ dashboard_template.html
+├─ keyterms.txt
+├─ prompt.txt
 
 ```
 

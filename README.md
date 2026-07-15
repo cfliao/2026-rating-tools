@@ -29,15 +29,33 @@
 
 主要Python腳本依功能分為三個工具：
 
-- `filter_ai_courses.py`: 關鍵字篩選
-- `rate_courses.py`: LLM評分
-- `build_dashboard.py`: 將結果轉成互動式html以利人工檢核
+- `filter_ai_courses`: 關鍵字初步篩選
+- `rate_courses`: AI人才圖像能力課程評分
+- `build_dashboard`: 將結果轉成互動式html
 
 ![Workflow Architecture](references/arch.png)
 
+## 執行需求
+
+- Python 3.9+
+- exe檔只適用Windows 系統; 其它平台須先安裝python，透過python runtime執行。
+- 課程評分模組`rate_courses` 需要可連線的 LLM API，將API key設定為環境變數，建議勿將API key寫死在程式碼中
+
+## 版本發布
+
+- [release/release.md](release/release.md)：發佈說明與下載連結。
+
+## 使用說明 (尚未完善，持續改進中)
+
+- 安裝與使用說明文件 [release/document.md](release/document.md)
+- 操作範例(以政大114學年度課程分析為例) [release/example-nccu.md](release/example-nccu.md)
+
+## 開發者注意事項
+
+本區資訊供自行修改程式碼的開發人員參考。
 
 
-## 專案結構
+### 專案結構
 
 ```text
 .
@@ -58,23 +76,6 @@
   └─ testLLM.py
 ```
 
-## 執行需求
-
-- Python 3.9+
-- exe檔只適用Windows 系統; 其它平台須先安裝python，透過python runtime執行。
-- 課程評分模組`rate_courses` 需要可連線的 LLM API，將API key設定為環境變數，建議勿將API key寫死在程式碼中
-
-## 版本發布
-
-- [release/release.md](release/release.md)：發佈說明與下載連結。
-
-## 使用說明 (尚未完善，持續改進中)
-
-詳見使用說明文件 [release/document.md](release/document.md)
-
-## 開發者注意事項
-
-本區資訊供自行修改程式碼的開發人員參考。
 
 ### 輸入欄位（篩選與評分）
 
