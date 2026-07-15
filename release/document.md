@@ -1,17 +1,6 @@
 # 文件說明
 
-## 概述
-
-本文件提供發佈包的安裝與使用說明。
-
-## 套件內容
-
-- 壓縮檔：`260715.zip`
-- 用途：課程篩選、LLM 評分與儀表板產出。
-
-## 快速開始
-
-### 1) 環境設定
+## 環境設定
 
 1. 建立一個專案目錄用來存放本工具，例如C:\rating-tools。
 2. 解壓縮 (如`260715.zip`)到此目錄，會得到類似下面的目錄結構。 (該檔案可在此下傳:  [release.md](release.md))
@@ -27,7 +16,7 @@ C:/rating-tools
 
 ```
 
-### 2) AI關鍵字初篩
+## AI關鍵字初篩
 
 1. 首先，我們要使用「AI關鍵字初篩工具 (filter_ai_courses)」從下傳的課程網資料(xlsx)中，初篩潛在具有AI內涵的課程。
 2. 它的輸出入關係如下圖所示，系統在config/keyterms.txt中定義了預設的關鍵字，您可自行編修keyterms.txt的內容調整篩選結果。
@@ -47,8 +36,7 @@ filter_ai_courses.exe --input [輸入xlsx檔名] --terms [關鍵字檔名] --out
 ```bash
 filter_ai_courses.exe --input 114-0001.xlsx --terms keyterms.txt --output output.csv
 ```
-
-5. 若不帶參數，預設使用同目錄的 `input.xlsx`, `keyterms.txt`，並輸出到 `output.csv`。
+若不帶參數，預設使用同目錄的 `input.xlsx`, `keyterms.txt`，並輸出到 `output.csv`。
 
 6. 功能重點：
 - 自動嘗試 UTF-8 與 Big5/CP950 編碼
@@ -56,12 +44,12 @@ filter_ai_courses.exe --input 114-0001.xlsx --terms keyterms.txt --output output
 - 可處理 CSV 內含多行文字欄位
 - 輸出檔固定為 UTF-8 編碼
 
-### 3) 用 LLM 產生課程評分
+## 用 LLM 產生課程評分
 
 ```bash
 python rate_courses.py --input output.csv --prompt prompt.txt --output rating.csv
 ```
-#### OpenAI 相容介面範例
+### OpenAI 相容介面範例
 
 ```bash
 # Linux/macOS
@@ -84,7 +72,7 @@ python rate_courses.py --provider openai --model gpt-5.6-luna --base-url https:/
 
 ```
 
-### 4) 產生儀表板與分流檔案
+## 產生儀表板
 
 ```bash
 python build_dashboard.py --input rating.csv --outdir out
