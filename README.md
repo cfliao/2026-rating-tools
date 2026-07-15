@@ -61,81 +61,17 @@
 ## 執行需求
 
 - Python 3.9+
-- Windows / macOS / Linux
-- `rate_courses.py` 需要可連線的 LLM API，需將API key設定為環境變數，建議勿將API key寫死在程式碼中
+- exe檔只適用Windows 系統; 其它平台須先安裝python，透過python runtime執行。
+- 課程評分模組`rate_courses` 需要可連線的 LLM API，將API key設定為環境變數，建議勿將API key寫死在程式碼中
+
+## 版本發布
+
+- [release/release.md](release/release.md)：發佈說明與下載連結。
 
 ## 使用說明 (尚未完善，持續改進中)
 
-### 1) 篩選 AI 相關課程
+詳見使用說明文件 [release/document.md](release/document.md)
 
-```bash
-python filter_ai_courses.py --input input.xlsx --terms keyterms.txt --output output.csv
-```
-
-若不帶參數，預設使用同目錄的 `input.xlsx`, `keyterms.txt`，並輸出到 `output.csv`。
-
-功能重點：
-
-- 自動嘗試 UTF-8 與 Big5/CP950 編碼
-- 針對純英數關鍵詞（如 AI, ML, LLM）做全字比對，降低誤判
-- 可處理 CSV 內含多行文字欄位
-- 輸出檔固定為 UTF-8 編碼
-
-### 2) 用 LLM 產生課程評分
-
-```bash
-python rate_courses.py --input output.csv --prompt prompt.txt --output rating.csv
-```
-
-
-#### OpenAI 相容介面範例
-
-```bash
-# Linux/macOS
-export OPENAI_API_KEY=your_key
-python rate_courses2.py \
-  --provider openai \
-  --model gpt-5.6-luna \
-  --base-url https://api.openai.com/v1 \
-  --input output.csv \
-  --prompt prompt.txt \
-  --output rating.csv
-
-# Windows PowerShell
-$env:OPENAI_API_KEY="your_key"
-python rate_courses.py --provider openai --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input output.csv --prompt prompt.txt --output rating.csv
-
-# Windows Cmd
-> set OPENAI_API_KEY="your_key"
-python rate_courses.py --provider openai --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input output.csv --prompt prompt.txt --output rating.csv
-
-
-```
-
-### 3) 產生儀表板與分流檔案
-
-```bash
-python build_dashboard.py --input rating.csv --outdir out
-```
-
-輸出內容：
-
-- `out/dashboard.html`
-- `out/rating_all.csv`
-- `out/rating_A_ge3.csv`
-- `out/rating_B_ge3.csv`
-- `out/rating_C_ge3.csv`
-- `out/rating_D_ge3.csv`
-
-`dashboard.html` 為單檔自我包含頁面，可直接用瀏覽器開啟。
-
-## 完整流程
-
-```bash
-python filter_ai_courses.py --input input.csv --terms keyterms.txt --output output.csv
-python rate_courses.py --input output.csv --prompt prompt.txt --output rating.csv
-python build_dashboard.py --input rating.csv --outdir out
-```
 
 ## 欄位與資料格式
 
@@ -184,7 +120,5 @@ python build_dashboard.py --input rating.csv --outdir out
 
 ## 備註
 
-## 版本發布
 
-- [release/release.md](release/release.md)：發佈說明與下載連結。
 
