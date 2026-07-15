@@ -14,7 +14,7 @@
 ### 1) 環境設定
 
 1. 建立一個專案目錄用來存放本工具，例如C:\rating-tools。
-2. 解壓縮 `260715.zip`到此目錄，會得到類似下面的目錄結構。 (該檔案可在此下傳:  [release.md](release.md))
+2. 解壓縮 (如`260715.zip`)到此目錄，會得到類似下面的目錄結構。 (該檔案可在此下傳:  [release.md](release.md))
 ```text
 C:/rating-tools
 ├─ filter_ai_courses.exe --> AI關鍵字初篩工具
@@ -29,9 +29,9 @@ C:/rating-tools
 
 ### 2) AI關鍵字初篩
 
-3. 首先，我們要使用「AI關鍵字初篩工具 (filter_ai_courses)」從下傳的課程網資料(xlsx)中，初篩潛在具有AI內涵的課程。
-   它的輸出入關係如下圖所示，系統在config/keyterms.txt中定義了預設的關鍵字，您可自行編修keyterms.txt的內容調整篩選結果。
-   只要「課程名稱」或「課程描述」中的內容符合任一關鍵字，就視為通過初篩。
+1. 首先，我們要使用「AI關鍵字初篩工具 (filter_ai_courses)」從下傳的課程網資料(xlsx)中，初篩潛在具有AI內涵的課程。
+2. 它的輸出入關係如下圖所示，系統在config/keyterms.txt中定義了預設的關鍵字，您可自行編修keyterms.txt的內容調整篩選結果。
+3. 只要「課程名稱」或「課程描述」中的內容符合任一關鍵字，就視為通過初篩。
 ```text
 課程網下載資料 (xlsx)        -------┐
                                    ├--> filter_ai_courses.exe --> 通過關鍵字初篩的課程資料 (csv)
