@@ -14,7 +14,7 @@
 ### 1) 環境設定
 
 1. 建立一個專案目錄用來存放本工具，例如C:\rating-tools。
-2. 解壓縮 `260715.zip`到此目錄，會得到類似下面的目錄結構。
+2. 解壓縮 `260715.zip`到此目錄，會得到類似下面的目錄結構。 (該檔案可在此下傳:  [release/release.md](release/release.md))
 ```text
 C:/rating-tools
 ├─ filter_ai_courses.exe --> AI關鍵字初篩工具
