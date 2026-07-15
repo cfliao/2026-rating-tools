@@ -184,3 +184,7 @@ python build_dashboard.py --input rating.csv --outdir out
 
 ## 備註
 
+## 版本發布
+
+- [release/release.md](release/release.md)：發佈說明與下載連結。
+
