@@ -38,16 +38,19 @@ C:/rating-tools
 config/keyterms.txt (關鍵字列表)----┘
 ```
 
-執行的指令如下:
+4. 執行的指令如下:
 
 ```bash
-python filter_ai_courses.exe --input input.xlsx --terms keyterms.txt --output output.csv
+filter_ai_courses.exe --input [輸入xlsx檔名] --terms [關鍵字檔名] --output [輸出csv檔名]
+```
+例如:
+```bash
+filter_ai_courses.exe --input 114-0001.xlsx --terms keyterms.txt --output output.csv
 ```
 
-若不帶參數，預設使用同目錄的 `input.xlsx`, `keyterms.txt`，並輸出到 `output.csv`。
+5. 若不帶參數，預設使用同目錄的 `input.xlsx`, `keyterms.txt`，並輸出到 `output.csv`。
 
-功能重點：
-
+6. 功能重點：
 - 自動嘗試 UTF-8 與 Big5/CP950 編碼
 - 針對純英數關鍵詞（如 AI, ML, LLM）做全字比對，降低誤判
 - 可處理 CSV 內含多行文字欄位
