@@ -1,6 +1,6 @@
 # 文件說明
 
-## 環境設定
+## 環境設定 (windows平台)
 
 1. 建立一個專案目錄用來存放本工具，例如C:\rating-tools。
 2. 解壓縮 (如`260715.zip`)到此目錄，會得到類似下面的目錄結構。 (該檔案可在此下傳:  [release.md](release.md))
@@ -38,7 +38,7 @@ filter_ai_courses.exe --input 114-0001.xlsx --terms keyterms.txt --output output
 ```
 若不帶參數，預設使用同目錄的 `input.xlsx`, `keyterms.txt`，並輸出到 `output.csv`。
 
-6. 功能重點：
+5. 功能重點：
 - 自動嘗試 UTF-8 與 Big5/CP950 編碼
 - 針對純英數關鍵詞（如 AI, ML, LLM）做全字比對，降低誤判
 - 可處理 CSV 內含多行文字欄位
