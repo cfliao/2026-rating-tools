@@ -24,11 +24,13 @@ C:/rating-tools
 │  └─ prompt.txt
 
 ```
-3. 上面三個工具的輸出、入關係如下
+3. 首先，我們要使用「AI關鍵字初篩工具 (filter_ai_courses)」從下傳的114年度課程網資料中，初篩潛在具有AI內涵的課程。
+   它的輸出入關係如下圖所示，系統在config/keyterms.txt中定義了預設的關鍵字，您可自行編修keyterms.txt的內容調整篩選結果。
+   只要「課程名稱」或「課程描述」中的內容符合任一關鍵字，就視為通過初篩。
 ```text
-課程網下載資料 (xlsx) -------┐
-                            ├--> filter_ai_courses.exe --> 通過關鍵字初篩的課程資料 (csv)
-keyterms.txt (關鍵字列表)----┘
+課程網下載資料 (xlsx)        -------┐
+                                   ├--> filter_ai_courses.exe --> 通過關鍵字初篩的課程資料 (csv)
+config/keyterms.txt (關鍵字列表)----┘
 ```
 
 
