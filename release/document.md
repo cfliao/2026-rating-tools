@@ -33,9 +33,9 @@ filter_ai_courses.exe --input [輸入xlsx檔名] --terms [關鍵字檔名] --out
 ```
 例如:
 ```bash
-filter_ai_courses.exe --input 114-0001.xlsx --terms keyterms.txt --output output.csv
+filter_ai_courses.exe --input 114-0001.xlsx --terms keyterms.txt --output ai-courses.csv
 ```
-若不帶參數，預設使用同目錄的 `input.xlsx`, `keyterms.txt`，並輸出到 `output.csv`。
+若不帶參數，預設使用同目錄的 `input.xlsx`, `keyterms.txt`，並輸出到 `ai-courses.csv`。
 
 5. 功能重點：
 - 自動嘗試 UTF-8 與 Big5/CP950 編碼
@@ -46,35 +46,30 @@ filter_ai_courses.exe --input 114-0001.xlsx --terms keyterms.txt --output output
 ## 用 LLM 產生課程評分
 
 ```bash
-python rate_courses.py --input output.csv --prompt prompt.txt --output rating.csv
+rate_courses.exe --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input ai-courses.csv --prompt prompt.txt --output rating.csv
 ```
 ### OpenAI 相容介面範例
 
 ```bash
-# Linux/macOS
-export OPENAI_API_KEY=your_key
-python rate_courses2.py \
-  --provider openai \
-  --model gpt-5.6-luna \
-  --base-url https://api.openai.com/v1 \
-  --input output.csv \
-  --prompt prompt.txt \
-  --output rating.csv
-
 # Windows PowerShell
 $env:OPENAI_API_KEY="your_key"
-python rate_courses.py --provider openai --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input output.csv --prompt prompt.txt --output rating.csv
+rate_courses.exe --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input ai-courses.csv --prompt prompt.txt --output rating.csv
 
 # Windows Cmd
 > set OPENAI_API_KEY="your_key"
-python rate_courses.py --provider openai --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input output.csv --prompt prompt.txt --output rating.csv
+rate_courses.exe --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input ai-courses.csv --prompt prompt.txt --output rating.csv
 
 ```
+
+補充說明：
+
+- 若相鄰課程的「課程名稱」相同，程式會把它們保留在同一批，即使該批次因此超過 `--batch-size`。
+- 程式會另外輸出 `failed.csv`；若有失敗批次，檔內會列出尚未成功評分的課程，若沒有失敗則檔案只包含表頭。
 
 ## 產生儀表板
 
 ```bash
-python build_dashboard.py --input rating.csv --outdir out
+build_dashboard.exe --input rating.csv --outdir out
 ```
 
 輸出內容：
@@ -91,9 +86,9 @@ python build_dashboard.py --input rating.csv --outdir out
 ## 完整流程
 
 ```bash
-python filter_ai_courses.py --input input.csv --terms keyterms.txt --output output.csv
-python rate_courses.py --input output.csv --prompt prompt.txt --output rating.csv
-python build_dashboard.py --input rating.csv --outdir out
+filter_ai_courses.exe --input input.xlsx --terms keyterms.txt --output ai-courses.csv
+rate_courses.exe --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input ai-courses.csv --prompt prompt.txt --output rating.csv
+build_dashboard.exe --input rating.csv --outdir out
 ```
 
 

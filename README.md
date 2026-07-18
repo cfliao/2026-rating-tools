@@ -3,9 +3,9 @@
 本專案基於全國課程網所匯出的課程資料，在篩選出初步課程後，針對該課程教育部AI人才圖像核心能力分別加以評分，並輸出為html檔。提供各校自行初步進行盤點，細部流程如下:
 
 1. 使用者由全國課程網，取出要評估課程，並匯出為xlsx  (預設為input.xlsx)
-2. 關鍵字篩選: 基於 [keyterms.txt](keyterms.txt) 初步篩選 AI 相關課程，並輸出為csv (預設為output.csv)
+2. 關鍵字篩選: 基於 [keyterms.txt](keyterms.txt) 初步篩選 AI 相關課程，並輸出為csv (預設為ai-courses.csv)
 3. 使用LLM 依規則([prompt.txt](prompt.txt))產出 A–D 能力評分，輸出為csv (預設為rating.csv)
-4. 產生可互動檢視的分析儀表板(單一html，預設為out/dashboard.html)
+4. 產生可互動檢視的分析儀表板(單一html，可輸出為dashboard.html或out/dashboard.html)
 
 ![Dashboard Preview 1](references/1.png)
 
@@ -62,7 +62,7 @@
 pip install -e .[build]
 ```
 
-執行打包腳本，會把 3 個 exe 輸出到 `release/`：
+執行打包腳本，會把 3 個 exe 輸出到 `release/`，並另外產生 `release/release-win.zip`：
 
 ```powershell
 python tools/build.py
@@ -78,14 +78,16 @@ python tools/build.py
 ├─ filter_ai_courses.py       # 課程篩選
 ├─ rate_courses.py            # LLM 評分
 ├─ build_dashboard.py         # 產生儀表板
-├─ output.csv                 # 篩選後課程（由 filter_ai_courses.py 產生）
+├─ ai-courses.csv             # 篩選後課程（由 filter_ai_courses.py 產生）
 ├─ rating.csv                 # LLM 評分結果
+├─ failed.csv                 # 評分失敗批次的課程（由 rate_courses.py 產生）
 ├─ keyterms.txt            # AI 關鍵詞清單（一行一個）
 ├─ prompt.txt              # 評分規則（LLM system prompt）
 ├─ dashboard_template.html # 儀表板 HTML 樣板
 ├─ data/                      # 範例與歷史資料
-├─ out/                       # 儀表板輸出目錄
+├─ release/                   # exe 與 release-win.zip 發佈目錄
 └─ tools/                     # 輔助工具
+  ├─ build.py
   └─ testLLM.py
 ```
 
@@ -98,6 +100,8 @@ python tools/build.py
 - 課程大綱
 
 `rate_courses.py` 若輸入檔含 `系統序號` 欄位，會一併寫入輸出 `rating.csv`；若缺少此欄位，程式會警告並留空。
+
+`rate_courses.py` 切分批次時，若相鄰課程的「課程名稱」相同，會保留在同一批，即使該批次因此超過 `--batch-size`；發生此情況時，程式也會在送給模型的 prompt 中明確說明。
 
 ### `rating.csv` 主要欄位
 
@@ -113,6 +117,8 @@ python tools/build.py
 - 證據不足處
 
 儀表板顯示時，課名後會加註系統序號（例如：`課程名稱（系統序號：8400328）`），方便人工比對原始資料。
+
+`rate_courses.py` 會另外輸出 `failed.csv`；若有失敗批次，檔內會列出尚未成功評分的課程，若沒有失敗則檔案只包含表頭，方便單獨重跑。
 
 <!-- ## 常見問題
 
