@@ -26,13 +26,32 @@ def extract_output_text(data):
     return "\n".join(texts)
 
 
+def extract_token_usage(data):
+    usage = getattr(data, "usage", None)
+    if usage is None and isinstance(data, dict):
+        usage = data.get("usage")
+
+    if usage is None and hasattr(data, "model_dump"):
+        usage = data.model_dump().get("usage", {})
+
+    if hasattr(usage, "model_dump"):
+        usage = usage.model_dump()
+
+    usage = usage or {}
+    return {
+        "input_tokens": usage.get("input_tokens", 0),
+        "output_tokens": usage.get("output_tokens", 0),
+        "total_tokens": usage.get("total_tokens", 0),
+    }
+
+
 def chat(prompt, api_key, base_url=BASE_URL, model=DEFAULT_MODEL):
     client = OpenAI(api_key=api_key, base_url=base_url)
     response = client.responses.create(
         model=model,
         input=prompt,
     )
-    return extract_output_text(response)
+    return extract_output_text(response), extract_token_usage(response)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -50,4 +69,11 @@ if __name__ == "__main__":
         user_input = input("You: ")
         if user_input.lower() in ("exit", "quit"):
             break
-        print("Model:", chat(user_input, api_key, base_url=args.base_url, model=args.model))
+        output_text, token_usage = chat(user_input, api_key, base_url=args.base_url, model=args.model)
+        print("Model:", output_text)
+        print(
+            "Tokens:",
+            f"input={token_usage['input_tokens']}",
+            f"output={token_usage['output_tokens']}",
+            f"total={token_usage['total_tokens']}",
+        )
