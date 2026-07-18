@@ -41,7 +41,7 @@ FIELDS = ["系統序號", "課程名稱", "課程大綱", "A分數", "A判定理
           "C分數", "C判定理由", "D分數", "D判定理由",
           "整體判定", "主要依據", "證據不足處"]
 
-TEMPLATE_FILENAME = "config/dashboard_template.html"
+TEMPLATE_FILENAME = "dashboard_template.html"
 PLACEHOLDER = "__DATA_JSON_PLACEHOLDER__"
 
 
@@ -139,7 +139,7 @@ def main():
     ap.add_argument("--input", default="rating.csv", help="rate_courses.py 產生的評分結果 CSV")
     ap.add_argument("--outdir", default=".", help="輸出目錄")
     ap.add_argument("--template", default=None,
-                     help="HTML 樣板路徑（預設使用與config/dashboard_template.html）")
+                     help="HTML 樣板路徑（預設使用與dashboard_template.html）")
     args = ap.parse_args()
 
     template_path = args.template or os.path.join(

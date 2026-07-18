@@ -15,9 +15,9 @@ rate_courses.py
     export OPENAI_API_KEY=sk-xxxxxxxx
     python rate_courses.py --model gpt-5.6-luna \\
         --base-url https://api.openai.com/v1 \\
-        --input output.csv --prompt config/prompt.txt --output rating.csv
+        --input output.csv --prompt prompt.txt --output rating.csv
     
-    # example to call local the model: python rate_courses2.py --model gpt-oss-120b-mxfp-GUFF --base-url http://192.168.4.89:13305/v1
+    # example to call local the model: python rate_courses.py --model gpt-oss-120b-mxfp-GUFF --base-url http://192.168.4.89:13305/v1
  
     # 不呼叫任何 API，只印出將送出的請求內容供檢查
     python rate_courses.py --dry-run
@@ -188,7 +188,7 @@ def chunked(seq, size):
 def main():
     ap = argparse.ArgumentParser(description="呼叫 LLM 依 prompt.txt 準則為課程評分，輸出 rating.csv")
     ap.add_argument("--input", default="output.csv", help="課程清單 CSV（需含課程名稱、課程大綱欄位）")
-    ap.add_argument("--prompt", default="config/prompt.txt", help="評分準則 prompt 檔案")
+    ap.add_argument("--prompt", default="prompt.txt", help="評分準則 prompt 檔案")
     ap.add_argument("--output", default="rating.csv", help="輸出的評分結果 CSV")
     ap.add_argument("--id-col", default="系統序號")
     ap.add_argument("--name-col", default="課程名稱")
