@@ -47,7 +47,7 @@
 
 ## 使用說明 (尚未完善，持續改進中)
 
-- 安裝與使用說明文件 [release/document.md](release/document.md)
+- 安裝與使用說明文件 [doc/document.md](doc/document.md)
 - 操作範例(以政大114學年度課程分析為例) [release/example-nccu.md](release/example-nccu.md)
 
 ## 開發者注意事項
