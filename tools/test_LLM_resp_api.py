@@ -1,14 +1,21 @@
 import os
-import requests
 import argparse
+
+from openai import OpenAI
 
 BASE_URL = "https://api.openai.com/v1"
 DEFAULT_MODEL = "gpt-5.6-luna"
 
 
 def extract_output_text(data):
-    if data.get("output_text"):
+    if hasattr(data, "output_text") and data.output_text:
+        return data.output_text
+    if isinstance(data, dict) and data.get("output_text"):
         return data["output_text"]
+
+    if hasattr(data, "model_dump"):
+        data = data.model_dump()
+
     texts = []
     for item in data.get("output", []):
         if item.get("type") != "message":
@@ -20,16 +27,12 @@ def extract_output_text(data):
 
 
 def chat(prompt, api_key, base_url=BASE_URL, model=DEFAULT_MODEL):
-    response = requests.post(
-        f"{base_url}/responses",
-        json={
-            "model": model,
-            "input": prompt,
-        },
-        headers={"Authorization": f"Bearer {api_key}"},
+    client = OpenAI(api_key=api_key, base_url=base_url)
+    response = client.responses.create(
+        model=model,
+        input=prompt,
     )
-    response.raise_for_status()
-    return extract_output_text(response.json())
+    return extract_output_text(response)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
