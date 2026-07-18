@@ -8,9 +8,7 @@
 
 到全國課程網下載政大 114 學年度課程資料。
 
-
-
-下載後，請將課程檔案放到專案的 `data` 資料夾中，例如：
+下載後，將課程檔案放到專案的 `data` 資料夾中，例如：
 
 ```text
 data/114-0001.xlsx
@@ -22,7 +20,7 @@ data/114-0001.xlsx
 
 在下方終端機 Terminal 中輸入：
 
-```Terminal
+```bash
 python filter_ai_courses.py data/114-0001.xlsx keyterms.txt data/114-0001-output.csv
 ```
 
