@@ -1,6 +1,5 @@
 /.venv
 /__pycache__
-uv.lock
 build
 out
 *.spec
