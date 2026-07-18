@@ -54,6 +54,20 @@
 
 本區資訊供自行修改程式碼的開發人員參考。
 
+### 打包成 exe
+
+先安裝打包依賴的函式庫：
+
+```powershell
+pip install -e .[build]
+```
+
+執行打包腳本，會把 3 個 exe 輸出到 `release/`：
+
+```powershell
+python tools/build.py
+```
+
 
 ### 專案結構
 

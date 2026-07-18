@@ -15,6 +15,7 @@ dependencies = [
     { name = "openai" },
     { name = "openpyxl" },
     { name = "pandas" },
+    { name = "pyinstaller" },
     { name = "requests" },
     { name = "xlrd" },
 ]
@@ -29,6 +30,7 @@ requires-dist = [
     { name = "openai", specifier = ">=2.46.0" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=3.0.3" },
+    { name = "pyinstaller", specifier = ">=6.21.0" },
     { name = "pyinstaller", marker = "extra == 'build'", specifier = ">=6.21.0" },
     { name = "requests", specifier = ">=2.32.0" },
     { name = "xlrd", specifier = ">=2.0.2" },

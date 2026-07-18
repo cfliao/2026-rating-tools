@@ -106,16 +106,16 @@ def build_data_list(rows):
     return data
 
 
-def write_filtered_csv(rows, path, ability_col=None, threshold=3):
-    """寫出 CSV；若指定 ability_col，僅保留該能力分數 >= threshold 的列。"""
-    if ability_col:
-        rows = [r for r in rows if to_int_score(r.get(ability_col)) >= threshold]
-    with open(path, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=FIELDS)
-        writer.writeheader()
-        for r in rows:
-            writer.writerow({k: r.get(k, "") for k in FIELDS})
-    return len(rows)
+# def write_filtered_csv(rows, path, ability_col=None, threshold=3):
+#     """寫出 CSV；若指定 ability_col，僅保留該能力分數 >= threshold 的列。"""
+#     if ability_col:
+#         rows = [r for r in rows if to_int_score(r.get(ability_col)) >= threshold]
+#     with open(path, "w", encoding="utf-8-sig", newline="") as f:
+#         writer = csv.DictWriter(f, fieldnames=FIELDS)
+#         writer.writeheader()
+#         for r in rows:
+#             writer.writerow({k: r.get(k, "") for k in FIELDS})
+#     return len(rows)
 
 
 def render_dashboard(data, template_path, output_path):
@@ -135,7 +135,7 @@ def render_dashboard(data, template_path, output_path):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="依 rating.csv 產生互動網頁與篩選後的 CSV 檔案")
+    ap = argparse.ArgumentParser(description="依 rating.csv 產生互動網頁")
     ap.add_argument("--input", default="rating.csv", help="rate_courses.py 產生的評分結果 CSV")
     ap.add_argument("--outdir", default=".", help="輸出目錄")
     ap.add_argument("--template", default=None,
@@ -157,22 +157,22 @@ def main():
     os.makedirs(args.outdir, exist_ok=True)
 
     # 五個 CSV 檔案
-    n_all = write_filtered_csv(rows, os.path.join(args.outdir, "rating_all.csv"))
-    n_a = write_filtered_csv(rows, os.path.join(args.outdir, "rating_A_ge3.csv"), "A分數")
-    n_b = write_filtered_csv(rows, os.path.join(args.outdir, "rating_B_ge3.csv"), "B分數")
-    n_c = write_filtered_csv(rows, os.path.join(args.outdir, "rating_C_ge3.csv"), "C分數")
-    n_d = write_filtered_csv(rows, os.path.join(args.outdir, "rating_D_ge3.csv"), "D分數")
+    #n_all = write_filtered_csv(rows, os.path.join(args.outdir, "rating_all.csv"))
+    #n_a = write_filtered_csv(rows, os.path.join(args.outdir, "rating_A_ge3.csv"), "A分數")
+    #n_b = write_filtered_csv(rows, os.path.join(args.outdir, "rating_B_ge3.csv"), "B分數")
+    #n_c = write_filtered_csv(rows, os.path.join(args.outdir, "rating_C_ge3.csv"), "C分數")
+    #n_d = write_filtered_csv(rows, os.path.join(args.outdir, "rating_D_ge3.csv"), "D分數")
 
     # 互動網頁
     data = build_data_list(rows)
     dashboard_path = os.path.join(args.outdir, "dashboard.html")
     render_dashboard(data, template_path, dashboard_path)
 
-    print(f"總課程數: {n_all}")
-    print(f"A 能力 ≥3 分課程數: {n_a}")
-    print(f"B 能力 ≥3 分課程數: {n_b}")
-    print(f"C 能力 ≥3 分課程數: {n_c}")
-    print(f"D 能力 ≥3 分課程數: {n_d}")
+    # print(f"總課程數: {n_all}")
+    # print(f"A 能力 ≥3 分課程數: {n_a}")
+    # print(f"B 能力 ≥3 分課程數: {n_b}")
+    # print(f"C 能力 ≥3 分課程數: {n_c}")
+    # print(f"D 能力 ≥3 分課程數: {n_d}")
     print(f"已輸出網頁: {dashboard_path}")
 
 

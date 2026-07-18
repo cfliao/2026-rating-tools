@@ -145,9 +145,14 @@ def extract_csv_rows(text, expected_cols=len(LLM_OUTPUT_FIELDS)):
     return rows
 
 
-def build_user_message(batch, include_id=False):
+def build_user_message(batch, include_id=False, batch_size=None):
     parts = ["以下為需要評分的課程，請依照系統指示逐一評分，"
              "並「只」輸出 CSV（含一列表頭，之後每門課一列），不要有其他文字：\n"]
+    if batch_size is not None and len(batch) > batch_size:
+        parts.append(
+            f"注意：本批原設定 batch size 為 {batch_size}，但為避免相同課程名稱被拆到不同批次，"
+            f"本批實際包含 {len(batch)} 門課程。請仍逐一對每門課輸出一列 CSV。\n"
+        )
     for i, c in enumerate(batch, 1):
         if include_id:
             parts.append(f"【課程 {i}】\n系統序號：{c['id']}\n課程名稱：{c['name']}\n課程大綱：{c['outline']}\n")
@@ -180,9 +185,38 @@ def attach_outline(rows, batch):
     return final_rows, False
 
 
-def chunked(seq, size):
-    for i in range(0, len(seq), size):
-        yield seq[i:i + size]
+def build_batches(courses, size):
+    if size <= 0:
+        raise ValueError("batch size 必須大於 0")
+
+    batches = []
+    current_batch = []
+
+    for course in courses:
+        if not current_batch:
+            current_batch.append(course)
+            continue
+
+        same_name_as_previous = course["name"].strip() == current_batch[-1]["name"].strip()
+        if len(current_batch) < size or same_name_as_previous:
+            current_batch.append(course)
+            continue
+
+        batches.append(current_batch)
+        current_batch = [course]
+
+    if current_batch:
+        batches.append(current_batch)
+
+    return batches
+
+
+def write_failed_courses(path, courses, id_col, name_col, outline_col):
+    with open(path, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.writer(f, quoting=csv.QUOTE_ALL)
+        writer.writerow([id_col, name_col, outline_col])
+        for course in courses:
+            writer.writerow([course["id"], course["name"], course["outline"]])
 
 
 def main():
@@ -228,16 +262,16 @@ def main():
         print(f"[錯誤] {args.input} 沒有讀到任何課程資料。", file=sys.stderr)
         sys.exit(1)
 
-    batches = list(chunked(courses, args.batch_size))
+    batches = build_batches(courses, args.batch_size)
 
     if args.dry_run:
-        print(f"共 {len(courses)} 門課程，將分成 {len(batches)} 批（每批 {args.batch_size} 門）。\n")
+        print(f"共 {len(courses)} 門課程，將分成 {len(batches)} 批（目標每批 {args.batch_size} 門）。\n")
         print("=== system prompt（前 300 字）===")
         print(system_prompt[:300] + ("..." if len(system_prompt) > 300 else ""))
         print("\n=== 各批 user message ===")
         for bi, batch in enumerate(batches, 1):
-            print(f"\n--- 批次 {bi}/{len(batches)} ---")
-            print(build_user_message(batch, include_id=True))
+            print(f"\n--- 批次 {bi}/{len(batches)}，共 {len(batch)} 門 ---")
+            print(build_user_message(batch, include_id=True, batch_size=args.batch_size))
         return
 
     if not api_key:
@@ -246,12 +280,13 @@ def main():
 
     all_rows = []
     failed_batches = []
+    failed_courses = []
 
     if args.raw_log_dir:
         os.makedirs(args.raw_log_dir, exist_ok=True)
 
     for bi, batch in enumerate(batches, 1):
-        user_msg = build_user_message(batch)
+        user_msg = build_user_message(batch, batch_size=args.batch_size)
         last_err = None
         for attempt in range(1, args.max_retries + 1):
             try:
@@ -291,6 +326,7 @@ def main():
             print(f"[批次 {bi}/{len(batches)}] 重試 {args.max_retries} 次後仍失敗，"
                   f"跳過此批次。最後錯誤：{last_err}", file=sys.stderr)
             failed_batches.append(bi)
+            failed_courses.extend(batch)
 
         time.sleep(args.sleep)
 
@@ -299,10 +335,20 @@ def main():
         writer.writerow(FIELDS)
         writer.writerows(all_rows)
 
+    failed_output = os.path.join(os.path.dirname(os.path.abspath(args.output)), "failed.csv")
+    write_failed_courses(
+        failed_output,
+        failed_courses,
+        args.id_col,
+        args.name_col,
+        args.outline_col,
+    )
+
     print(f"\n共 {len(courses)} 門課程，成功取得 {len(all_rows)} 列評分結果。")
     if failed_batches:
         print(f"失敗批次：{failed_batches}（共 {sum(len(batches[i-1]) for i in failed_batches)} 門課程未評分），"
               f"請檢查後可單獨重跑這些課程。", file=sys.stderr)
+        print(f"失敗課程已輸出至: {failed_output}", file=sys.stderr)
     print(f"已輸出至: {args.output}")
 
 

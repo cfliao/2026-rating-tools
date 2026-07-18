@@ -188,6 +188,10 @@ def main():
         if matcher(name) or matcher(outline):
             matched_rows.append([replace_comma_with_semicolon(cell) for cell in row])
 
+    matched_rows.sort(
+        key=lambda row: row[name_idx].strip().lower() if name_idx < len(row) else ""
+    )
+
     safe_header = [replace_comma_with_semicolon(cell) for cell in header]
 
     with open(output_path, "w", encoding="utf-8", newline="", errors="replace") as f:
