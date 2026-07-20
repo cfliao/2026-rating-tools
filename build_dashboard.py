@@ -17,15 +17,8 @@ build_dashboard.py
    - 最多五門課程的能力比較
    - 響應式版面（電腦、平板、手機）
 
-2. 五個 CSV 檔案：
-   - rating_all.csv        全部課程（原始評分結果）
-   - rating_A_ge3.csv      能力 A 單項 ≥3 分的課程
-   - rating_B_ge3.csv      能力 B 單項 ≥3 分的課程
-   - rating_C_ge3.csv      能力 C 單項 ≥3 分的課程
-   - rating_D_ge3.csv      能力 D 單項 ≥3 分的課程
-
 使用方式：
-    python3 build_dashboard.py --input data/114-0001-rating.csv --outdir out
+    python build_dashboard.py --input data/114-0001-rating.csv --output out/dashboard.html
 """
 
 import argparse
@@ -43,6 +36,15 @@ FIELDS = ["系統序號", "課程名稱", "課程大綱", "A分數", "A判定理
 
 TEMPLATE_FILENAME = "dashboard_template.html"
 PLACEHOLDER = "__DATA_JSON_PLACEHOLDER__"
+
+
+def get_default_template_path():
+    """取得預設樣板路徑：優先使用執行檔同目錄，否則使用腳本同目錄。"""
+    if getattr(sys, "frozen", False):
+        base_dir = os.path.dirname(sys.executable)
+    else:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_dir, TEMPLATE_FILENAME)
 
 
 def read_rating_csv(path):
@@ -136,14 +138,13 @@ def render_dashboard(data, template_path, output_path):
 
 def main():
     ap = argparse.ArgumentParser(description="依 rating.csv 產生互動網頁")
-    ap.add_argument("--input", default="rating.csv", help="rate_courses.py 產生的評分結果 CSV")
-    ap.add_argument("--outdir", default=".", help="輸出目錄")
-    ap.add_argument("--template", default=None,
-                     help="HTML 樣板路徑（預設使用與dashboard_template.html）")
+    ap.add_argument("--input", default="rating.csv", help="產生的評分結果 CSV")
+    ap.add_argument("--output", default="dashboard.html", help="輸出檔案路徑")
+    ap.add_argument("--template", default=get_default_template_path(),
+                     help="HTML 樣板路徑（預設使用執行檔同目錄的 dashboard_template.html）")
     args = ap.parse_args()
 
-    template_path = args.template or os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), TEMPLATE_FILENAME)
+    template_path = args.template
 
     if not os.path.exists(template_path):
         print(f"[錯誤] 找不到樣板檔案：{template_path}", file=sys.stderr)
@@ -154,26 +155,15 @@ def main():
         print("[錯誤] rating.csv 沒有任何資料。", file=sys.stderr)
         sys.exit(1)
 
-    os.makedirs(args.outdir, exist_ok=True)
-
-    # 五個 CSV 檔案
-    #n_all = write_filtered_csv(rows, os.path.join(args.outdir, "rating_all.csv"))
-    #n_a = write_filtered_csv(rows, os.path.join(args.outdir, "rating_A_ge3.csv"), "A分數")
-    #n_b = write_filtered_csv(rows, os.path.join(args.outdir, "rating_B_ge3.csv"), "B分數")
-    #n_c = write_filtered_csv(rows, os.path.join(args.outdir, "rating_C_ge3.csv"), "C分數")
-    #n_d = write_filtered_csv(rows, os.path.join(args.outdir, "rating_D_ge3.csv"), "D分數")
-
     # 互動網頁
     data = build_data_list(rows)
-    dashboard_path = os.path.join(args.outdir, "dashboard.html")
-    render_dashboard(data, template_path, dashboard_path)
+    output_path = args.output
+    output_dir = os.path.dirname(output_path)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+    render_dashboard(data, template_path, output_path)
 
-    # print(f"總課程數: {n_all}")
-    # print(f"A 能力 ≥3 分課程數: {n_a}")
-    # print(f"B 能力 ≥3 分課程數: {n_b}")
-    # print(f"C 能力 ≥3 分課程數: {n_c}")
-    # print(f"D 能力 ≥3 分課程數: {n_d}")
-    print(f"已輸出網頁: {dashboard_path}")
+    print(f"已輸出網頁: {output_path}")
 
 
 if __name__ == "__main__":

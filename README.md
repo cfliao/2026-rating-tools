@@ -5,7 +5,7 @@
 1. 使用者由全國課程網，取出要評估課程，並匯出為xlsx  (預設為input.xlsx)
 2. 關鍵字篩選: 基於 [keyterms.txt](keyterms.txt) 初步篩選 AI 相關課程，並輸出為csv (預設為ai-courses.csv)
 3. 使用LLM 依規則([prompt.txt](prompt.txt))產出 A–D 能力評分，輸出為csv (預設為rating.csv)
-4. 產生可互動檢視的分析儀表板(單一html，可輸出為dashboard.html或out/dashboard.html)
+4. 產生可互動檢視的分析儀表板(單一html，輸出檔名可由 `--output` 指定)
 
 ![Dashboard Preview 1](references/1.png)
 

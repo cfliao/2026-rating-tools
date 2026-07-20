@@ -106,28 +106,28 @@ rate_courses --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input a
 ## 產生儀表板網頁
 上步驟完成後會產生一個評分結果(預設為rating.csv)，它可供進一步資料處理。為了方便檢視結果，可以用build_dashboard 來基於評分結果的csv檔產生一個儀表板網頁，指令如下:
 ```bash
-usage: build_dashboard [-h] [--input INPUT] [--outdir OUTDIR] [--template TEMPLATE]
+usage: build_dashboard [-h] [--input INPUT] [--output OUTPUT] [--template TEMPLATE]
 
 依 rating.csv 產生互動網頁
 
 options:
   -h, --help           show this help message and exit
   --input INPUT        rate_courses.py 產生的評分結果 CSV
-  --outdir OUTDIR      輸出目錄
+  --output OUTPUT      輸出檔案路徑
   --template TEMPLATE  HTML 樣板路徑（預設使用與dashboard_template.html）
 ```
 例如:
 ```bash
-build_dashboard.exe --input rating.csv --template dashboard_template.html --outdir out
+build_dashboard.exe --input rating.csv --template dashboard_template.html --output out/dashboard.html
 ```
-它會在out目錄輸出 `dashboard.html`，它是一個自我包含的網頁，可直接用瀏覽器開啟。
+它會直接輸出指定的單一 HTML 檔案，可直接用瀏覽器開啟。
 
 ## 完整流程回顧
 
 ```bash
 filter_ai_courses --input input.xlsx --terms keyterms.txt --output ai-courses.csv
 rate_courses --model gpt-5.6-luna --base-url https://api.openai.com/v1 --input ai-courses.csv --prompt prompt.txt --output rating.csv
-build_dashboard --input rating.csv --outdir out
+build_dashboard --input rating.csv --output out/dashboard.html
 ```
 
 

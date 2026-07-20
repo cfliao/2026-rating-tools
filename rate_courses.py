@@ -234,7 +234,7 @@ def main():
                      help="API 位址; 預設 https://api.openai.com/v1")
     ap.add_argument("--api-key", default=None,
                      help="API key；未提供時讀取環境變數 OPENAI_API_KEY")
-    ap.add_argument("--batch-size", type=int, default=6,
+    ap.add_argument("--batch-size", type=int, default=3,
                      help="每次請求評分的課程數；能力較弱的模型"
                           "建議調低，例如 1～2，避免長輸出中途規則漂移或格式跑掉")
     #ap.add_argument("--max-tokens", type=int, default=4096, help="每次請求的回應長度上限")
