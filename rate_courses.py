@@ -192,18 +192,26 @@ def build_batches(courses, size):
     batches = []
     current_batch = []
 
+    grouped_courses = []
+    current_group = []
+    current_name = None
     for course in courses:
-        if not current_batch:
-            current_batch.append(course)
-            continue
+        course_name = course["name"].strip()
+        if current_group and course_name != current_name:
+            grouped_courses.append(current_group)
+            current_group = []
+        if not current_group:
+            current_name = course_name
+        current_group.append(course)
 
-        same_name_as_previous = course["name"].strip() == current_batch[-1]["name"].strip()
-        if len(current_batch) < size or same_name_as_previous:
-            current_batch.append(course)
-            continue
+    if current_group:
+        grouped_courses.append(current_group)
 
-        batches.append(current_batch)
-        current_batch = [course]
+    for group in grouped_courses:
+        if current_batch and len(current_batch) + len(group) > size:
+            batches.append(current_batch)
+            current_batch = []
+        current_batch.extend(group)
 
     if current_batch:
         batches.append(current_batch)
@@ -234,7 +242,7 @@ def main():
                      help="API 位址; 預設 https://api.openai.com/v1")
     ap.add_argument("--api-key", default=None,
                      help="API key；未提供時讀取環境變數 OPENAI_API_KEY")
-    ap.add_argument("--batch-size", type=int, default=3,
+    ap.add_argument("--batch-size", type=int, default=6,
                      help="每次請求評分的課程數；能力較弱的模型"
                           "建議調低，例如 1～2，避免長輸出中途規則漂移或格式跑掉")
     #ap.add_argument("--max-tokens", type=int, default=4096, help="每次請求的回應長度上限")
@@ -262,15 +270,21 @@ def main():
         print(f"[錯誤] {args.input} 沒有讀到任何課程資料。", file=sys.stderr)
         sys.exit(1)
 
+    total_courses = len(courses)
     batches = build_batches(courses, args.batch_size)
 
     if args.dry_run:
-        print(f"共 {len(courses)} 門課程，將分成 {len(batches)} 批（目標每批 {args.batch_size} 門）。\n")
+        dry_run_completed_courses = 0
+        print(f"input 總課數：{total_courses}")
+        print(f"目前評分完成總課數：0")
+        print(f"共 {total_courses} 門課程，將分成 {len(batches)} 批（目標每批 {args.batch_size} 門）。\n")
         print("=== system prompt（前 300 字）===")
         print(system_prompt[:300] + ("..." if len(system_prompt) > 300 else ""))
         print("\n=== 各批 user message ===")
         for bi, batch in enumerate(batches, 1):
             print(f"\n--- 批次 {bi}/{len(batches)}，共 {len(batch)} 門 ---")
+            dry_run_completed_courses += len(batch)
+            print(f"input 總課數：{total_courses}，分批完成總課數：{dry_run_completed_courses}")
             print(build_user_message(batch, include_id=True, batch_size=args.batch_size))
         return
 
@@ -279,11 +293,15 @@ def main():
         sys.exit(1)
 
     all_rows = []
+    completed_courses = 0
     failed_batches = []
     failed_courses = []
 
     if args.raw_log_dir:
         os.makedirs(args.raw_log_dir, exist_ok=True)
+
+    #print(f"input 總課數：{total_courses}")
+    #print(f"目前評分完成總課數：{completed_courses}")
 
     for bi, batch in enumerate(batches, 1):
         user_msg = build_user_message(batch, batch_size=args.batch_size)
@@ -313,8 +331,10 @@ def main():
                               f"原始課程大綱（LLM 回傳的課程名稱與送出的不一致），"
                               f"這幾列的「課程大綱」欄位會留空，請人工比對。", file=sys.stderr)
                 all_rows.extend(rows)
+                completed_courses += len(rows)
                 print(f"[批次 {bi}/{len(batches)}] 成功，取得 {len(rows)} 列"
                       f"（送出 {len(batch)} 門課程）")
+                #print(f"目前進度：input 總課數 {total_courses}，評分完成總課數 {completed_courses}")
                 break
             except (urllib.error.URLError, ValueError, json.JSONDecodeError, KeyError) as e:
                 last_err = e
@@ -344,7 +364,9 @@ def main():
         args.outline_col,
     )
 
-    print(f"\n共 {len(courses)} 門課程，成功取得 {len(all_rows)} 列評分結果。")
+    print(f"\ninput 總課數：{total_courses}")
+    print(f"評分完成總課數：{completed_courses}")
+    print(f"共 {total_courses} 門課程，成功取得 {len(all_rows)} 列評分結果。")
     if failed_batches:
         print(f"失敗批次：{failed_batches}（共 {sum(len(batches[i-1]) for i in failed_batches)} 門課程未評分），"
               f"請檢查後可單獨重跑這些課程。", file=sys.stderr)
