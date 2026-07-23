@@ -44,9 +44,10 @@ data/114-0001.xlsx
 在下方終端機 Terminal 中輸入：
 
 ```bash
-python filter_ai_courses.py --input data/114-0001.xlsx --terms keyterms.txt --output data/114-0001-output.csv
+python3 filter_ai_courses.py --input data/114-0001.xlsx --terms keyterms.txt --output data/114-0001-output.csv
 ```
 ![filter](images/filter.png)
+
 執行後會在 `data` 資料夾中產生：
 
 ```text
@@ -61,9 +62,9 @@ python filter_ai_courses.py --input data/114-0001.xlsx --terms keyterms.txt --ou
 
 ```Terminal
 export OPENAI_API_KEY="your_key"
-    python rate_courses.py --model gpt-5.6-luna \\
+    python3 rate_courses.py --model gpt-5.6-luna \\
         --base-url https://api.openai.com/v1 \\
-        --input output.csv --prompt prompt.txt --output rating.csv
+        --input data/114-0001-output.csv --prompt prompt.txt --output data/114-0001-rating.csv
 ```
 
 請將 `your_key` 換成自己的 OpenAI API Key。
@@ -73,7 +74,14 @@ export OPENAI_API_KEY="your_key"
 ```text
 114-0001-rating.csv
 ```
-![rating](images/rating.png)
+![rating](images/)
+
+若想測試可以打下方指令
+```Terminal
+python3 rate_courses.py --input data/114-0001-output.csv --prompt prompt.txt --dry-run
+```
+
+
 ---
 
 ## 4. 產生 Dashboard 網頁
@@ -81,7 +89,7 @@ export OPENAI_API_KEY="your_key"
 在 Terminal 中輸入：
 
 ```powershell
-python build_dashboard.py --input data/114-0001-rating.csv --outdir out
+python3 build_dashboard.py --input data/114-0001-rating.csv --output out/dashboard.html
 ```
 ![build](images/build.png)
 執行後會在 `out` 資料夾中產生：
