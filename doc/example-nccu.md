@@ -1,4 +1,4 @@
-# 以政大114學年度課程為例
+# 以政大114學年度課程為例 (使用Mac)
 
 ## 下傳課程檔案(xlsx)
 
@@ -39,7 +39,7 @@ data/114-0001.xlsx
 
 ---
 
-## 2. 篩選 AI 相關課程
+## 2. AI關鍵字初篩 (filter_ai_courses)
 
 在下方終端機 Terminal 中輸入：
 
@@ -56,7 +56,7 @@ python3 filter_ai_courses.py --input data/114-0001.xlsx --terms keyterms.txt --o
 
 ---
 
-## 3. 使用 OpenAI 評分課程
+## 3. 產生課程評分 (rate_courses)
 
 接著輸入：
 
@@ -83,7 +83,7 @@ python3 rate_courses.py --input data/114-0001-output.csv --prompt prompt.txt --d
 
 ---
 
-## 4. 產生 Dashboard 網頁
+## 4. 產生儀表板網頁
 
 在 Terminal 中輸入：
 
