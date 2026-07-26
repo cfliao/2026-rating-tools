@@ -45,7 +45,7 @@
 
 - [release/release.md](release/release.md)：發佈說明與下載連結。
 
-## 使用說明 (尚未完善，持續改進中)
+## 使用說明 (持續改進中)
 
 - 安裝與使用說明-使用預編譯exe檔+Windows [document.md](doc/document.md)
 - 安裝與使用說明-使用python+Mac (以政大114學年度課程分析為例) [example-nccu.md](doc/example-nccu.md)
