@@ -74,7 +74,6 @@ export OPENAI_API_KEY="your_key"
 ```text
 114-0001-rating.csv
 ```
-![rating](images/)
 
 若想測試可以打下方指令
 ```Terminal
